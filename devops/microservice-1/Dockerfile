@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 # Install baseimage libraries 
 RUN apt-get update -y && \
-    apt-get install -y python-pip python-dev
+    apt-get install -y python3.5-pip python3.5-dev
 
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
