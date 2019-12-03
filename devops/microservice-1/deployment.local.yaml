@@ -14,7 +14,8 @@ spec:
     spec: 
       containers: 
       - name: microservice-1 
-        image: airqo/microservice-1 
+        imagePullPolicy: Never
+        image: microservice-1:0.0.1
         ports: 
         - containerPort: 5000 
 --- 
@@ -30,5 +31,5 @@ spec:
   - protocol: TCP 
     port: 5000 
     targetPort: 5000 
-    nodePort: 31000 
+    nodePort: 30020
   type: NodePort 
