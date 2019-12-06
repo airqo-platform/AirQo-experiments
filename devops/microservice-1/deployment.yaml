@@ -14,7 +14,7 @@ spec:
     spec: 
       containers: 
       - name: microservice-1 
-        imagePullPolicy: Never
+        imagePullPolicy: Always
         image: microservice-1:0.0.1
         ports: 
         - containerPort: 5000 
