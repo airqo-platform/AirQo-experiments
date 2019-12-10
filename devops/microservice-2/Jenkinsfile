@@ -1,4 +1,4 @@
-/* pipeline {
+pipeline {
 
   environment {
     
@@ -42,4 +42,4 @@
 
   }
 
-} */
+} 
