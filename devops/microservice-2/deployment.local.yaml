@@ -1,35 +1,35 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
 kind: Deployment 
 metadata: 
-  name: microservice-2 
+  name: node-microservice-test 
 spec: 
   selector: 
     matchLabels: 
-      app: microservice-2 
-  replicas: 2 # tells deployment to run 2 pods matching the template 
+      app: node-microservice-test
+  replicas: 3 # tells deployment to run 2 pods matching the template 
   template: 
     metadata: 
       labels: 
-        app: microservice-2 
+        app: node-microservice-test 
     spec: 
       containers: 
-      - name: microservice-2 
+      - name: node-microservice-test
         imagePullPolicy: Never
-        image: microservice-2:0.0.1
+        image: node-microservice-test-2:0.0.1
         ports: 
-        - containerPort: 8080 
+        - containerPort: 8000 
 --- 
 # https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service  
 kind: Service 
 apiVersion: v1 
 metadata: 
-  name: microservice-2-service 
+  name: node-microservice-test 
 spec: 
   selector: 
-    app: microservice-2 
+    app: node-microservice-test 
   ports: 
   - protocol: TCP 
-    port: 80 
-    targetPort: 8080 
+    port: 8000 
+    targetPort: 8000 
     nodePort: 30021
   type: NodePort 
