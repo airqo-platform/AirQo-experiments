@@ -16,7 +16,7 @@ pipeline {
         stage("Build image") {
             steps {
                 script {
-                    myapp = docker.build("dogenrwot/node-microservice-test:${env.BUILD_ID}")
+                    myapp = docker.build("dogenrwot/node-microservice-test:${env.BUILD_ID}", "devops/microservice-2")
                 }
             }
         }
