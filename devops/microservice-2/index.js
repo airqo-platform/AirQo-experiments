@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Hello World From Nodejs!')
+  res.send('Testing nodejs Microservice!!')
 });
 
 app.listen(8000, () => {
