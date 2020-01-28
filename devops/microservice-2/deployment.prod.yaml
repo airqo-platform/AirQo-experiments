@@ -1,0 +1,38 @@
+piVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+name: node-microservice-test
+labels:
+  app: node-microservice-test
+spec:
+strategy:
+  type: Recreate
+template:
+  metadata:
+    labels:
+      app: node-microservice-test
+      tier: node-microservice-test
+  spec:
+    containers:
+    - name: node-microservice-test
+      image: dogenrwot/node-microservice-test:latest
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 8000
+        name: node-microservice-test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+name: node-microservice-test
+labels:
+  app: node-microservice-test
+spec:
+ports:
+  - port: 8000
+    targetPort: 8000
+selector:
+  app: node-microservice-test
+  tier: node-microservice-test
+type: LoadBalancer
