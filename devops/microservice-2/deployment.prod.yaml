@@ -1,38 +1,36 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
 kind: Deployment 
 metadata: 
-  name: node-microservice-test 
+  name: node-ms-test 
 spec: 
   selector: 
     matchLabels: 
-      app: node-microservice-test
+      app: node-ms-test
   replicas: 3 # tells deployment to run 2 pods matching the template 
   template: 
     metadata: 
       labels: 
-        app: node-microservice-test 
+        app: node-ms-test 
     spec: 
       containers: 
-      - name: node-microservice-test
+      - name: node-ms-test
         imagePullPolicy: Never
         image: dogenrwot/node-microservice-test:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
-          name: node-microservice-test
+          name: node-ms-test
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-name: node-microservice-test
-labels:
-  app: node-microservice-test
-spec:
-ports:
-  - port: 8000
-    targetPort: 8000
-selector:
-  app: node-microservice-test
-  tier: node-microservice-test
-type: LoadBalancer
+kind: Service 
+apiVersion: v1 
+metadata: 
+  name: node-ms-test 
+spec: 
+  selector: 
+    app: node-ms-test 
+  ports: 
+  - protocol: TCP 
+    port: 8000 
+    targetPort: 8000 
+  type: LoadBalancer
