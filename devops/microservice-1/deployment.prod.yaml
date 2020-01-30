@@ -1,0 +1,38 @@
+piVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+name: flask-microservice-test
+labels:
+  app: flask-microservice-test
+spec:
+strategy:
+  type: Recreate
+template:
+  metadata:
+    labels:
+      app: flask-microservice-test
+      tier: flask-microservice-test
+  spec:
+    containers:
+    - name: flask-microservice-test
+      image: dogenrwot/flask-microservice-test:latest
+      imagePullPolicy: Always
+      ports:
+      - containerPort: 5000
+        name: flask-microservice-test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+name: falsk-microservice-test
+labels:
+  app: flask-microservice-test
+spec:
+ports:
+  - port: 5000
+    targetPort: 5000
+selector:
+  app: flask-microservice-test
+  tier: flask-microservice-test
+type: LoadBalancer

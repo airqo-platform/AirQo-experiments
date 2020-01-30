@@ -2,3 +2,4 @@ env
 .git
 .*.sh
 .*.md
+deployment.local.yaml

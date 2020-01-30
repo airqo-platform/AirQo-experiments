@@ -1,45 +1,46 @@
-/* pipeline {
-
-  environment {
-    
-  }
-
-  agent any
-
-  stages {
-
-    stage('Checkout Source') {
-      steps {
-        git 'https://github.com/airqo-platform/AirQo-experiments.git'
-      }
+pipeline {
+    agent any
+    environment {
+        PROJECT_ID = 'airqo-250220'
+        LOCATION = 'us-central1-a'
+        CREDENTIALS_ID = 'airqo-250220'
+        CLUSTER_NAME_TEST = 'airqo-k8s-zonalcluster'
+        /*CLUSTER_NAME_PROD = 'CLUSTER-NAME-2'*/          
     }
-
-    stage('Build image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+    stages {
+        stage("Checkout code") {
+            steps {
+                checkout scm
+            }
         }
-      }
-    }
-
-    stage('Push Image') {
-      steps{
-        script {
-          docker.withRegistry( "" ) {
-            dockerImage.push()
-          }
+        stage("Build image") {
+            steps {
+                script {
+                    myapp = docker.build("dogenrwot/flask-microservice-test:${env.BUILD_ID}", "devops/microservice-1")
+                }
+            }
         }
-      }
-    }
-
-    stage('Deploy App') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "deployment.yaml", kubeconfigId: "mykubeconfig")
+        stage("Push image") {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                            myapp.push("latest")
+                            myapp.push("${env.BUILD_ID}")
+                    }
+                }
+            }
+        }       
+        stage('Deploy to GKE test cluster') {
+            steps{
+                sh("sed -i 's/flask-microservice-test:latest/node-microservice-test:${env.BUILD_ID}/g' ./devops/microservice-1/deployment.prod.yaml")
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'devops/microservice-1/deployment.prod.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
         }
-      }
-    }
-
-  }
-
-} */
+        /*stage('Deploy to GKE production cluster') {
+            steps{
+                input message:"Proceed with final deployment?"
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_PROD, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            }
+        }*/   
+    }    
+}
