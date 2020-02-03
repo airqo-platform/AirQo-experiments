@@ -1,7 +1,7 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
 kind: Deployment 
 metadata: 
-  name: node-ms-test 
+  name: node-microserive-test 
 spec: 
   selector: 
     matchLabels: 
@@ -13,19 +13,19 @@ spec:
         app: node-ms-test 
     spec: 
       containers: 
-      - name: node-ms-test
+      - name: node-microservice-test
         imagePullPolicy: Never
         image: dogenrwot/node-microservice-test:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
-          name: node-ms-test
+          name: node-microservice-test
 
 ---
 kind: Service 
 apiVersion: v1 
 metadata: 
-  name: node-ms-test 
+  name: node-microservice-test 
 spec: 
   selector: 
     app: node-ms-test 
@@ -33,5 +33,5 @@ spec:
   - protocol: TCP 
     port: 8000 
     targetPort: 8000 
-    nodePort: 30021
+    nodePort: 30030
   type: NodePort
