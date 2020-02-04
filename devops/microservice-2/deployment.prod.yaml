@@ -1,7 +1,7 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
 kind: Deployment 
 metadata: 
-  name: node-microserive-test 
+  name: node-microserv 
 spec: 
   selector: 
     matchLabels: 
@@ -13,7 +13,7 @@ spec:
         app: node-ms-test 
     spec: 
       containers: 
-      - name: node-microservice-test
+      - name: node-microserv
         imagePullPolicy: Never
         image: dogenrwot/node-microservice-test:latest
         imagePullPolicy: Always
@@ -25,7 +25,7 @@ spec:
 kind: Service 
 apiVersion: v1 
 metadata: 
-  name: node-microservice-test 
+  name: node-microserv 
 spec: 
   selector: 
     app: node-ms-test 
