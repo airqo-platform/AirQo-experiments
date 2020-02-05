@@ -32,11 +32,11 @@ pipeline {
         }       
         stage('Deploy to GKE test cluster') {
             steps{
-                sh("sed -i 's/node-microservice-test:latest/node-microservice-test:${env.BUILD_ID}/g' ./devops/microservice-2/deployment.prod.yaml")
+                //sh("sed -i 's/node-microservice-test:latest/node-microservice-test:${env.BUILD_ID}/g' ./devops/microservice-2/deployment.prod.yaml")
                 //step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'devops/microservice-2/deployment.prod.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-                withKubeConfig([credentialsId:'airqo-k8s-secret', contextName:'gke_airqo-250220_us-central1-a_airqo-k8s-zonalcluster']){
-                    sh 'kubectl --namespace=staging apply -f devops/microservice-2/deployment.prod.yaml'
-                }
+                //withKubeConfig([credentialsId:'airqo-k8s-secret', contextName:'gke_airqo-250220_us-central1-a_airqo-k8s-zonalcluster']){
+                //    sh 'kubectl --namespace=staging apply -f devops/microservice-2/deployment.prod.yaml'
+                //}
             }
         }
         /*stage('Deploy to GKE production cluster') {
