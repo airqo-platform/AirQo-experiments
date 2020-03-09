@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Testing nodejs Microservice!!-Version 1.2')
+  res.send('Testing nodejs Microservice!!-Version 1.45')
 });
 
 app.listen(8000, () => {
