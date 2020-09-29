@@ -59,7 +59,7 @@ pipeline {
                     kubectl apply -f ''devops/microservice-1/stage-test-cicd.yaml''
                     """
                     */
-                    kubernetesDeploy kubeconfigId: ${K8S_CONFIG}, configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
+                    kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
                 }
                 post{
                     success{
