@@ -6,9 +6,9 @@ WORKDIR /app
 
 # copy current directory into the container
 ADD . /app
-RUN chmod 777 /app
+
 # install requirements
-RUN pip install -r requirements.txt
+RUN pip install -r "requirements.txt"
 
 # make port 5000 available to the world outside
 EXPOSE 5000
