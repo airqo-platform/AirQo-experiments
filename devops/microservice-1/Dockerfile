@@ -8,7 +8,7 @@ WORKDIR /app
 ADD . /app
 
 # install requirements
-RUN pip install -r "requirements.txt"
+RUN pip install -r "devops/microservice-1/requirements.txt"
 
 # make port 5000 available to the world outside
 EXPOSE 5000
