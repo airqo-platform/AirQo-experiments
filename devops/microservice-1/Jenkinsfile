@@ -1,46 +1,64 @@
 pipeline {
     agent any
     environment {
+        
+        //environment variables
+        REGISTRY_URI = 'us.gcr.io'
         PROJECT_ID = 'airqo-250220'
-        LOCATION = 'us-central1-a'
-        CREDENTIALS_ID = 'airqo-250220'
-        CLUSTER_NAME_TEST = 'airqo-k8s-zonalcluster'
-        /*CLUSTER_NAME_PROD = 'CLUSTER-NAME-2'*/          
-    }
+        IMAGE_NAME_PROD = 'airqo-test-api'
+        IMAGE_NAME_STAGE = 'airqo-stage-test-api'
+        K8S_CONFIG = 'airqo-k8s-config'
+        }
     stages {
         stage("Checkout code") {
             steps {
                 checkout scm
             }
         }
-        stage("Build image") {
-            steps {
-                script {
-                    myapp = docker.build("dogenrwot/flask-microservice-test:${env.BUILD_ID}", "devops/microservice-1")
+        stage("Build"){
+                 steps {
+
+                    echo "Docker Build"
+                    sh """
+                    docker build -t ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest" -f "src/device-monitoring/Dockerfile" 
+                    """
+                    echo "Docker Push"
+                    sh """
+                        docker push ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest"
+                    """
+                    }
+                    post{
+                        success{
+                            echo "Build and Push Successfully"
+                            }
+                        failure{
+                            echo "Build and Push Failed"
+                            }
+                    }
+
                 }
-            }
-        }
-        stage("Push image") {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                            myapp.push("latest")
-                            myapp.push("${env.BUILD_ID}")
+        
+        stage("Deploy to Staging"){
+                steps {
+                    sh """
+                    kubectl delete -f 'devops/microservice-1/stage-test-cicd.yaml'
+                    kubectl apply -f ''devops/microservice-1/stage-test-cicd.yaml''
+                    """
+                }
+                post{
+                    success{
+                        echo "Successfully deployed to staging"
+                    }
+                    failure{
+                        echo "Failed deploying to staging"
                     }
                 }
             }
-        }       
-        stage('Deploy to GKE test cluster') {
-            steps{
-                sh("sed -i 's/flask-microservice-test:latest/node-microservice-test:${env.BUILD_ID}/g' ./devops/microservice-1/deployment.prod.yaml")
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'devops/microservice-1/deployment.prod.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+            stage('Final') {
+                steps {
+                    //webhook for your notification channel 
+                    echo 'Service deployed successfully'
+                }
             }
-        }
-        /*stage('Deploy to GKE production cluster') {
-            steps{
-                input message:"Proceed with final deployment?"
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_PROD, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-            }
-        }*/   
     }    
 }
