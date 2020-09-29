@@ -54,10 +54,12 @@ pipeline {
         
         stage("Deploy to Staging"){
                 steps {
-                    sh """
-                    //kubectl delete -f 'devops/microservice-1/stage-test-cicd.yaml'
+                    /*sh """
+                    kubectl delete -f 'devops/microservice-1/stage-test-cicd.yaml'
                     kubectl apply -f ''devops/microservice-1/stage-test-cicd.yaml''
                     """
+                    */
+                    kubernetesDeploy kubeconfigId: ${K8S_CONFIG}, configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
                 }
                 post{
                     success{
