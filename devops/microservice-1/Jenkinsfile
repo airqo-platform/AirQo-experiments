@@ -55,7 +55,7 @@ pipeline {
         stage("Deploy to Staging"){
                 steps {
                     sh """
-                    kubectl delete -f 'devops/microservice-1/stage-test-cicd.yaml'
+                    //kubectl delete -f 'devops/microservice-1/stage-test-cicd.yaml'
                     kubectl apply -f ''devops/microservice-1/stage-test-cicd.yaml''
                     """
                 }
