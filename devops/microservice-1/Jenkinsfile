@@ -20,7 +20,7 @@ pipeline {
 
                     echo "Docker Build"
                     sh """
-                    docker build -t ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest" -f "devops/microservice-1" 
+                    docker build -t ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest" -f "devops/microservice-1/Dockerfile" 
                     """
                     echo "Docker Push"
                     sh """
