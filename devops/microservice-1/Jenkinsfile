@@ -32,7 +32,9 @@ pipeline {
                                 returnStdout: true
                             ).trim()
                         echo "Pushing image To GCR"
-                        sh "docker push docker push ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest"
+                        sh """
+                        docker push docker push ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest"
+                        """
                     }
                     /*sh """
                         docker push ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest"
