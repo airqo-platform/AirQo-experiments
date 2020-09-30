@@ -8,6 +8,7 @@ pipeline {
         IMAGE_NAME_PROD = 'airqo-test-api'
         IMAGE_NAME_STAGE = 'airqo-stage-test-api'
         K8S_CONFIG = 'airqo-k8s-config'
+        K8S_URL = 'https://34.78.78.202:6443'
         }
     stages {
         stage("Checkout code") {
@@ -57,7 +58,7 @@ pipeline {
                     """
                     */
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
-                    withKubeConfig([credentialsId: "${K8S_CONFIG}"]) {
+                    withKubeConfig([credentialsId: 'airqo-k8s-config', serverUrl: 'https://34.78.78.202:6443']) {
                         sh 'kubectl config view'
                     }
                 }
