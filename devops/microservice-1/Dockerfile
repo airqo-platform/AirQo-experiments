@@ -15,4 +15,4 @@ EXPOSE 5000
 
 #CMD ["gunicorn", "--config", "./conf/gunicorn_conf.py", "src:app"]
 # ENTRYPOINT ["python"]
-CMD ["python3", "app.py"]
+CMD ["python3", "devops/microservice-1/app.py"]
