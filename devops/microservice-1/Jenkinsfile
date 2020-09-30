@@ -20,7 +20,7 @@ pipeline {
 
                     echo "Docker Build"
                     sh """
-                    docker build -t ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest" -f "devops/microservice-1/Dockerfile" . 
+                    docker build -t ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest" -f "devops/microservice-1/Dockerfile" . 
                     """
                     withCredentials([file(credentialsId: 'airqo-gcr', variable: 'GC_KEY')]){
                         sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin ${REGISTRY_URI}"
@@ -33,9 +33,8 @@ pipeline {
                         */
                         echo "Pushing image To GCR"
                         sh """
-                        gcloud container images add-tag ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE
-    ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"v${env.BUILD_NUMBER}"
-                        docker push ${REGISTRY_URI}/${PROJECT_ID}/$IMAGE_NAME_STAGE:"latest"
+                        gcloud container images add-tag ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE} ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"v${env.BUILD_NUMBER}"
+                        docker push ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest"
                         """
                     }
                     }
