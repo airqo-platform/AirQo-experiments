@@ -11,6 +11,11 @@ pipeline {
         K8S_URL = 'https://34.78.78.202:6443'
         }
     stages {
+        stage("Start"){
+            steps {
+                slackSend color: '#BADA55', message: 'AirQo ${IMAGE_NAME_STAGE} build started', channel: '#notifs-airqo-cicd'
+            }
+        }
         stage("Checkout code") {
             steps {
                 checkout scm
@@ -77,6 +82,7 @@ pipeline {
                 steps {
                     //webhook for your notification channel 
                     echo 'Service deployed successfully'
+                    slackSend color: '#BADA55', message: 'AirQo ${IMAGE_NAME_STAGE} service deployed successfully', channel: '#notifs-airqo-cicd'
                 }
             }
     }    
