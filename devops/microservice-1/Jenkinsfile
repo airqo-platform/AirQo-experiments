@@ -60,7 +60,7 @@ pipeline {
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
                     withKubeConfig([credentialsId: 'airqo-k8s-config']) {
                         sh """
-                        kubectl config view
+                        kubectl apply -f 'devops/microservice-1/stage-test-cicd.yaml'
                         """
                     }
                 }
