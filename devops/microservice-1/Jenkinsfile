@@ -58,8 +58,10 @@ pipeline {
                     """
                     */
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
-                    withCredentials([kubeconfigcontent(credentialsId: 'airqo-k8s-config', variable: 'KUBECONFIG_CONTENT')]) {
-                        sh 'echo "${KUBECONFIG_CONTENT}"'
+                    withCredentials([kubeconfigfile(credentialsId: 'airqo-k8s-config', variable: 'KUBECONFIG')]) {
+                        sh """
+                        cat $KUBECONFIG
+                        """
                     }
                 }
                 post{
