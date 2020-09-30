@@ -58,7 +58,7 @@ pipeline {
                     """
                     */
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
-                    withKubeConfig([credentialsId: 'airqo-k8s-config', serverUrl: 'https://34.78.78.202:6443']) {
+                    withKubeConfig([credentialsId: 'airqo-k8s-config', serverUrl: 'http://10.240.0.11:6443']) {
                         sh 'kubectl config view'
                     }
                 }
