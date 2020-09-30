@@ -13,7 +13,9 @@ pipeline {
     stages {
         stage("Start"){
             steps {
+                withCredentials([file(credentialsId: 'airqo-slack', variable: 'SLACK_TOKEN')]){
                 slackSend color: '#BADA55', message: 'AirQo ${IMAGE_NAME_STAGE} build started', channel: '#notifs-airqo-cicd'
+                }
             }
         }
         stage("Checkout code") {
