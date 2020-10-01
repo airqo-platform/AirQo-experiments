@@ -13,9 +13,7 @@ pipeline {
     stages {
         stage("Start"){
             steps {
-                withCredentials([string(credentialsId: 'airqo-slack', variable: 'SLACK_TOKEN')]){
-                    slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: '#notifs-airqo-cicd')
-                }
+                slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             }
         }
         stage("Checkout code") {
@@ -84,7 +82,7 @@ pipeline {
                 steps {
                     //webhook for your notification channel 
                     echo 'Service deployed successfully'
-                    slackSend color: '#BADA55', message: 'AirQo ${IMAGE_NAME_STAGE} service deployed successfully', channel: '#notifs-airqo-cicd'
+                    slackSend (color: '#BADA55', message: 'AirQo ${IMAGE_NAME_STAGE} service deployed successfully')
                 }
             }
     }    
