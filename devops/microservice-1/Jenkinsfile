@@ -14,7 +14,7 @@ pipeline {
         stage("Start"){
             steps {
                 withCredentials([string(credentialsId: 'airqo-slack', variable: 'SLACK_TOKEN')]){
-                    slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", , channel: '#notifs-airqo-cicd', tokenCredentialId: $SLACK_TOKEN, bot-user:true)
+                    slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", , channel: '#notifs-airqo-cicd', tokenCredentialId: $SLACK_TOKEN, bot-user: true)
                 }
             }
         }
