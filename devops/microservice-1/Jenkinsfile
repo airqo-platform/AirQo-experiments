@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage("Start"){
             steps {
-                slackSend (color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                slackSend (color: '#1976d2', message: "BUILD STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             }
         }
         stage("Checkout code") {
@@ -82,7 +82,7 @@ pipeline {
                 steps {
                     //webhook for your notification channel 
                     echo 'Service deployed successfully'
-                    slackSend (color: '#BADA55', message: 'AirQo ${IMAGE_NAME_STAGE} service deployed successfully')
+                    slackSend (color: '#43a047', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                 }
             }
     }    
