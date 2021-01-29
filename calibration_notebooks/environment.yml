@@ -1,0 +1,9 @@
+name: calibration_notebooks
+
+dependencies:
+  # install dependencies
+  - python=3.7
+  - pip
+  - jupyterlab
+  - pip:
+    - git+https://github.com/airqo-platform/calibration.git@6b60b74b4cb68ef0b4a578cde0509973d92c9387
