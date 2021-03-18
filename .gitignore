@@ -1,0 +1,25 @@
+__pycache__/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+# pycharm
+.idea/
+
+# pickle files
+*.pkl
+
+# datafiles
+*.csv
+node_modules/
+.vscode
+.vscode/
+.ipynb_checkpoints/
+*.json
+*.csv
+*.png
+.gitkeep
+.DS_Store
