@@ -44,6 +44,7 @@ This folder contains a basic template file and folder structure for reproducible
 > conda activate reproducibility-template
 > ```
 > Install requirements:
+> ```
 > pip install -r requirements.txt
 > ```
 > Execute code:
@@ -52,6 +53,7 @@ This folder contains a basic template file and folder structure for reproducible
 > python code/02_clean_data.py
 > python code/03_analysis.py
 > ```
+
 
 Substitute `environment.yml` for `requirements.txt`, if appropriate. If using Jupyter notebooks, instructions may be better embedded within the notebook file.
 
