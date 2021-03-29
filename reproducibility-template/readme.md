@@ -54,7 +54,8 @@ This folder contains a basic template file and folder structure for reproducible
 > python code/03_analysis.py
 > ```
 
+## `requirements.txt`
+
+This file must list the package requirements needed to execute the code in `code/`.
 
 Substitute `environment.yml` for `requirements.txt`, if appropriate. If using Jupyter notebooks, instructions may be better embedded within the notebook file.
-
-## `requirements.txt`
