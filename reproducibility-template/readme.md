@@ -2,14 +2,6 @@
 
 This folder contains a basic template file and folder structure for reproducible resreach in Python. It consists of the following folders and files:
 
-## `code/`
-
-**Mandatory** 
-
-- Must contain Jupyer notebooks and / or Python scripts.
-- There must (at a minimum) be clear seperation of function between data download, data munging and analysis. In the case of Jupyter notebooks these may be seperate headings, for scripts they may be seperate files.
-- ToDo: Structure for tests and Python modules.
-
 ## `data/`
 
 ### `raw/`
@@ -21,6 +13,17 @@ This folder contains a basic template file and folder structure for reproducible
 ### `clean/`
 
 - If the analysis is not performed directly on raw data, this folder should contain "clean" (munged, combined) data.
+
+## `notebooks/`
+
+- Must contain Jupyer notebooks.
+- There must (at a minimum) be clear seperation of function between data download, data munging and analysis. In the case of Jupyter notebooks these may be seperate headings, for scripts they may be seperate files.
+
+## `scripts/`
+
+- Must contain Python scripts.
+- There must (at a minimum) be clear seperation of function between data download, data munging and analysis. In the case of Jupyter notebooks these may be seperate headings, for scripts they may be seperate files.
+- ToDo: Structure for tests and Python modules.
 
 ## LICENSE
 
