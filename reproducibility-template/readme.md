@@ -12,14 +12,26 @@ This folder contains a basic template file and folder structure for reproducible
 
 ### `clean/`
 
+**Optional**
+
 - If the analysis is not performed directly on raw data, this folder should contain "clean" (munged, combined) data.
 
+## `models/`
+
+**Optional**
+
+- If the analysis includes a model output files, e.g. a `.pkl` of a neural network, store them here.
+
 ## `notebooks/`
+
+**Optional**
 
 - Must contain Jupyer notebooks.
 - There must (at a minimum) be clear seperation of function between data download, data munging and analysis. In the case of Jupyter notebooks these may be seperate headings, for scripts they may be seperate files.
 
 ## `scripts/`
+
+**Optional**
 
 - Must contain Python scripts.
 - There must (at a minimum) be clear seperation of function between data download, data munging and analysis. In the case of Jupyter notebooks these may be seperate headings, for scripts they may be seperate files.
@@ -27,9 +39,13 @@ This folder contains a basic template file and folder structure for reproducible
 
 ## LICENSE
 
+**Mandatory**
+
 - If this folder is not in a repository which already has a license, an appropriate license is essential.
 
 ## `readme.md`
+
+**Mandatory**
 
 - Instructions to run the code, for example:
 
