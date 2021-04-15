@@ -135,8 +135,6 @@ def predict(model, X, y):
 
 if __name__=='__main__':
     filepath = './data/raw/train_set.csv'
-    #print(os.path.abspath(filepath))
     train_set = get_data(filepath)
-    #print(train_set.head())
     train_set = clean_data(train_set)
     print(train_set.head())
