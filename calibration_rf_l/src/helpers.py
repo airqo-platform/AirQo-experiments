@@ -1,4 +1,9 @@
 import pandas as pd 
+from datetime import datetime
+import os
+import joblib
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 def get_data(filepath):
     """Creates a dataframe from a spreadsheet
@@ -127,3 +132,11 @@ def predict(model, X, y):
     ypred = model.predict(X)
     rmse = round(mean_squared_error(y, ypred, squared=False), 2)
     return rmse, ypred
+
+if __name__=='__main__':
+    filepath = './data/raw/train_set.csv'
+    #print(os.path.abspath(filepath))
+    train_set = get_data(filepath)
+    #print(train_set.head())
+    train_set = clean_data(train_set)
+    print(train_set.head())
