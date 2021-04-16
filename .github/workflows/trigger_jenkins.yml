@@ -16,7 +16,7 @@ jobs:
     - name: determine changed microservices
       id: getfile
       run: |
-        echo "::set-output name=files::$(git diff --name-only env.GIT_PREVIOUS_COMMIT env.GIT_COMMIT | sort -u | awk 'BEGIN {FS="/"} {print $1}' | uniq)"
+        echo "::set-output name=files::$(git diff --name-only git rev-parse --short "HEAD^" git rev-parse --short HEAD | sort -u | awk 'BEGIN {FS="/"} {print $1}' | uniq)"
     - name: echo the changed files
       run: |
         for i in $${{ steps.getfile.output.files }}; do 
