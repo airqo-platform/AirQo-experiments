@@ -16,8 +16,7 @@ jobs:
         echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r $${{ github.sha }} | xargs)"
     - name: echo the changed files
       run: |
-        for i in $${{ steps.getfile.output.files }}
-        do 
+        for i in $${{ steps.getfile.output.files }}; do 
           echo $i 
         done
     - name: trigger single Job
