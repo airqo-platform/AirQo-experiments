@@ -13,8 +13,8 @@ jobs:
     - name: determine changed microservices
       id: getfile
       run: |
-        chmod +x ./bin/changed.sh
-        ./bin/changed.sh
+        chmod +x bin/changed.sh
+        bin/changed.sh
     #    echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r $${{ github.sha }} | xargs)"
     # - name: echo the changed files
     #   run: |
