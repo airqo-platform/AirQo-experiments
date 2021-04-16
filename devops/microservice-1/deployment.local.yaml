@@ -1,39 +1,38 @@
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
-kind: Deployment 
-metadata: 
-  name: microservice-1 
-spec: 
-  selector: 
-    matchLabels: 
-      app: microservice-1 
-  replicas: 2 # tells deployment to run 2 pods matching the template 
-  template: 
-    metadata: 
-      labels: 
-        app: microservice-1 
-    spec: 
-      containers: 
-      - name: microservice-1 
-        imagePullPolicy: Never
-        image: microservice-1:0.0.1
-        ports: 
-        - containerPort: 5000 
---- 
-# https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service  
-kind: Service 
-apiVersion: v1 
-metadata: 
-  name: microservice-1-service 
-spec: 
-  selector: 
-    app: microservice-1 
-  ports: 
-  - protocol: TCP 
-    port: 5000 
-    targetPort: 5000 
-    nodePort: 30020
-  type: NodePort 
-
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: microservice-1
+spec:
+  selector:
+    matchLabels:
+      app: microservice-1
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: microservice-1
+    spec:
+      containers:
+        - name: microservice-1
+          imagePullPolicy: always
+          image: microservice-1:0.0.1
+          ports:
+            - containerPort: 5000
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+kind: Service
+apiVersion: v1
+metadata:
+  name: microservice-1-service
+spec:
+  selector:
+    app: microservice-1
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 30020
+  type: NodePort
 #
 #  ---
 # apiVersion: "v1"
@@ -81,7 +80,6 @@ spec:
 #     resource:
 #       name: "cpu"
 #       targetAverageUtilization: 80
-
 
 # ---
 # apiVersion: "v1"

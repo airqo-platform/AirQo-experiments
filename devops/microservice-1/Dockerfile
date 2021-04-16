@@ -8,11 +8,11 @@ WORKDIR /app
 ADD . /app
 
 # install requirements
-RUN pip3 install -r requirements.txt
+RUN pip install -r "devops/microservice-1/requirements.txt"
 
 # make port 5000 available to the world outside
 EXPOSE 5000
 
 #CMD ["gunicorn", "--config", "./conf/gunicorn_conf.py", "src:app"]
 # ENTRYPOINT ["python"]
-CMD ["python3", "app.py"]
+CMD ["python3", "devops/microservice-1/app.py"]
