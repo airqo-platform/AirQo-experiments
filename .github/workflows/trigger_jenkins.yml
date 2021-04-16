@@ -14,13 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: determine changed microservices
-      id: getfile
+      id: files
+      uses: jitterbit/get-changed-files@v1
       run: |
-        echo "::set-output name=files::$(git diff --name-only git rev-parse --short "HEAD^" git rev-parse --short HEAD | sort -u | awk 'BEGIN {FS="/"} {print $1}' | uniq)"
-    - name: echo the changed files
-      run: |
-        for i in $${{ steps.getfile.output.files }}; do 
-          echo $i 
+        for changed_file in ${{ steps.files.outputs.all }}; do
+          echo "Do something with this ${changed_file}."
         done
     - name: trigger single Job
       uses: appleboy/jenkins-action@master
