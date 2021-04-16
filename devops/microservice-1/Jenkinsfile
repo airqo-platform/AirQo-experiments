@@ -3,12 +3,12 @@ pipeline {
     environment {
         
         //environment variables
-        REGISTRY_URI = 'us.gcr.io'
-        PROJECT_ID = 'airqo-250220'
+        REGISTRY_URI = '${env.REGISTRY_URL}'
+        PROJECT_ID = '${env.PROJECT_ID}'
         IMAGE_NAME_PROD = 'airqo-test-api'
         IMAGE_NAME_STAGE = 'airqo-stage-test-api'
-        K8S_CONFIG = 'airqo-k8s-config'
-        K8S_URL = 'https://34.78.78.202:6443'
+        K8S_CONFIG = '{env.K8_CONFIG}'
+        K8S_URL = '{env.K8S_URL}'
         }
     stages {
         stage("Start"){
