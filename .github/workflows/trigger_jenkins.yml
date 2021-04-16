@@ -16,6 +16,7 @@ jobs:
     - name: determine changed microservices
       id: files
       uses: jitterbit/get-changed-files@v1
+    - name: print list of changed files
       run: |
         for changed_file in ${{ steps.files.outputs.all }}; do
           echo "Do something with this ${changed_file}."
