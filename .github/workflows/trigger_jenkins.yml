@@ -5,6 +5,9 @@ on:
 defaults:
   run:
     working-directory: devops
+env:
+  GIT_PREVIOUS_COMMIT: $(git rev-parse --short "HEAD^")
+  GIT_COMMIT: $(git rev-parse --short HEAD)
 jobs:
   build:
     name: Build
@@ -13,7 +16,7 @@ jobs:
     - name: determine changed microservices
       id: getfile
       run: |
-        echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r $${{ github.sha }} | xargs)"
+        echo "::set-output name=files::$(git diff --name-only $${ env.GIT_PREVIOUS_COMMIT }} $${ env.GIT_COMMIT }} | sort -u | awk 'BEGIN {FS="/"} {print $1}' | uniq)"
     - name: echo the changed files
       run: |
         for i in $${{ steps.getfile.output.files }}; do 
