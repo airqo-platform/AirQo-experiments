@@ -2,9 +2,6 @@ name: trigger jenkins job
 on:
   push:
     branches: [ ft-jenkins-trigger ]
-defaults:
-  run:
-    working-directory: devops
 jobs:
   build:
     name: Build
