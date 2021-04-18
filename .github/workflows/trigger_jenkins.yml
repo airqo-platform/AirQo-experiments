@@ -10,15 +10,14 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: determine changed microservices
-      id: getfile
+    - name: Get file changes
+      id: get_file_changes
+      uses: trilom/file-changes-action@v1.2.3
+      with:
+        output: ' '
+    - name: Echo file changes
       run: |
-        echo "::set-output name=files::$(git diff --name-only master)"
-    - name: echo the changed files
-      run: |
-        for i in $${{ steps.getfile.output.files }}; do 
-          echo $i 
-        done
+        echo Changed files: ${{ steps.get_file_changes.outputs.files }}
     - name: trigger single Job
       uses: appleboy/jenkins-action@master
       with:
