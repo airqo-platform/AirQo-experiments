@@ -13,7 +13,7 @@ jobs:
     - name: determine changed microservices
       id: getfile
       run: |
-        echo "::set-output name=files::$(git diff --name-only master..ft-jenkins-trigger | sort -u | awk 'BEGIN {FS="devops/"} {print $2}' | uniq)"
+        echo "::set-output name=files::$(git diff --name-only master)"
     - name: echo the changed files
       run: |
         for i in $${{ steps.getfile.output.files }}; do 
