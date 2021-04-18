@@ -3,12 +3,12 @@ pipeline {
     environment {
         
         //environment variables
-        REGISTRY_URI = '${env.REGISTRY_URL}'
-        PROJECT_ID = '${env.PROJECT_ID}'
+        REGISTRY_URI = ${env.REGISTRY_URL}
+        PROJECT_ID = ${env.PROJECT_ID}
         IMAGE_NAME_PROD = 'airqo-test-api'
         IMAGE_NAME_STAGE = 'airqo-stage-test-api'
-        K8S_CONFIG = '{env.K8_CONFIG}'
-        K8S_URL = '{env.K8S_URL}'
+        K8S_CONFIG = ${env.K8_CONFIG}
+        K8S_URL = ${env.K8S_URL}
         }
     stages {
         stage("Start"){
