@@ -28,7 +28,7 @@ pipeline {
                     sh """
                     docker build -t ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest" -f "devops/microservice-1/Dockerfile" . 
                     """
-                    withCredentials([file(credentialsId: '${GCR_CONFIG}', variable: 'GC_KEY')]){
+                    withCredentials([file(credentialsId: ${GCR_CONFIG}, variable: 'GC_KEY')]){
                         sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin ${REGISTRY_URI}"
                         sh "gcloud auth activate-service-account --key-file='$GC_KEY'"
                         sh "gcloud auth configure-docker"
@@ -50,6 +50,8 @@ pipeline {
                             }
                         failure{
                             echo "Build and Push Failed"
+                             slackSend (color: '#FF0000', message: "IMAGE BUILD AND PUSH FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+
                             }
                     }
 
@@ -63,7 +65,7 @@ pipeline {
                     """
                     */
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
-                    withKubeConfig([credentialsId: '${K8S_CONFIG}']) {
+                    withKubeConfig([credentialsId: ${K8S_CONFIG}]) {
                         sh """
                         kubectl apply -f 'devops/microservice-1/stage-test-cicd.yaml'
                         """
@@ -75,6 +77,7 @@ pipeline {
                     }
                     failure{
                         echo "Failed deploying to staging"
+                        slackSend (color: '#FF0000', message: "DEPLOYMENT FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                     }
                 }
             }
