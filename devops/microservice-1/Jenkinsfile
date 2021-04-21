@@ -2,14 +2,8 @@ pipeline {
     agent any
     environment {
         
-        //environment variables
-        //REGISTRY_URI = env.REGISTRY_URL
-        //PROJECT_ID = env.PROJECT_ID
         IMAGE_NAME_PROD = 'airqo-test-api'
         IMAGE_NAME_STAGE = 'airqo-stage-test-api'
-        GCR_CONFIG = ${GCR_CONFIG}
-        K8S_CONFIG = ${K8_CONFIG}
-        //K8S_URL = env.K8S_URL
         }
     stages {
         stage("Start"){
@@ -29,7 +23,7 @@ pipeline {
                     sh """
                     docker build -t ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest" -f "devops/microservice-1/Dockerfile" . 
                     """
-                    withCredentials([file(credentialsId: '${GCR_CONFIG}', variable: 'GC_KEY')]){
+                    withCredentials([file(credentialsId: "${GCR_CONFIG}", variable: 'GC_KEY')]){
                         sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin ${REGISTRY_URI}"
                         sh "gcloud auth activate-service-account --key-file='$GC_KEY'"
                         sh "gcloud auth configure-docker"
@@ -66,7 +60,7 @@ pipeline {
                     """
                     */
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
-                    withKubeConfig([credentialsId: '${K8S_CONFIG}']) {
+                    withKubeConfig([credentialsId: "${K8S_CONFIG}"]) {
                         sh """
                         kubectl apply -f 'devops/microservice-1/stage-test-cicd.yaml'
                         """
