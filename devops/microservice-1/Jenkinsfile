@@ -28,8 +28,8 @@ pipeline {
                     sh """
                     docker build -t ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest" -f "devops/microservice-1/Dockerfile" . 
                     """
-                    withCredentials([file(credentialsId: '${env.GCR_CONFIG}', variable: 'GC_KEY')]){
-                        sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin ${env.REGISTRY_URI}"
+                    withCredentials([file(credentialsId: '${GCR_CONFIG}', variable: 'GC_KEY')]){
+                        sh "cat '$GC_KEY' | docker login -u _json_key --password-stdin ${REGISTRY_URI}"
                         sh "gcloud auth activate-service-account --key-file='$GC_KEY'"
                         sh "gcloud auth configure-docker"
                         /* GLOUD_AUTH = sh (
@@ -39,8 +39,8 @@ pipeline {
                         */
                         echo "Pushing image To GCR"
                         sh """
-                        gcloud container images add-tag ${env.REGISTRY_URI}/${env.PROJECT_ID}/${IMAGE_NAME_STAGE} ${env.REGISTRY_URI}/${env.PROJECT_ID}/${IMAGE_NAME_STAGE}:"v${env.BUILD_NUMBER}"
-                        docker push ${env.REGISTRY_URI}/${env.PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest"
+                        gcloud container images add-tag ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE} ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"v${env.BUILD_NUMBER}"
+                        docker push ${REGISTRY_URI}/${PROJECT_ID}/${IMAGE_NAME_STAGE}:"latest"
                         """
                     }
                     }
@@ -63,7 +63,7 @@ pipeline {
                     """
                     */
                     // kubernetesDeploy kubeconfigId: 'airqo-k8s-config', configs: 'devops/microservice-1/stage-test-cicd.yaml', enableConfigSubstitution: true
-                    withKubeConfig([credentialsId: '${env.K8S_CONFIG}']) {
+                    withKubeConfig([credentialsId: '${K8S_CONFIG}']) {
                         sh """
                         kubectl apply -f 'devops/microservice-1/stage-test-cicd.yaml'
                         """
