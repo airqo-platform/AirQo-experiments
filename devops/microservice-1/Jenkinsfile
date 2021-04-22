@@ -63,6 +63,7 @@ pipeline {
                     withKubeConfig([credentialsId: "${K8S_CONFIG}"]) {
                         sh """
                         kubectl apply -f 'devops/microservice-1/stage-test-cicd.yaml'
+                        kubectl rollout restart deployment/${IMAGE_NAME_STAGE} -n staging
                         """
                     }
                 }
