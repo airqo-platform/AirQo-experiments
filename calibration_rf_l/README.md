@@ -3,6 +3,7 @@ This project aims to calibrate readings of raw PM 2.5 values from low-cost monit
 
 
 ## Instructions to run the code
+To run this code, you need to have Python>=3.7 installed on your system.
 
 > Clone this repository:
 > ```
