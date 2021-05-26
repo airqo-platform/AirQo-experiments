@@ -40,7 +40,7 @@ def get_data(path):
     -------
     X : Array
         a numpy array consisting of the features data
-    Y: Array
+    Y : Array
         a numpy array consisting of the target data
     """
     d = pickle.load(open(path,'rb'))
@@ -55,7 +55,7 @@ def train_model(Xtraining, Ytraining):
     ----------
     Xtraining : Array
         The X training data
-    Ytraining: Array
+    Ytraining : Array
         The target training data
 
     Returns
@@ -81,11 +81,57 @@ def train_model(Xtraining, Ytraining):
     return m
 
 def make_predictions(m, Xtest, Ytest):
+    """Gets details of locations considered
+
+    Parameters
+    ----------
+    m : GPR model
+        The trained model
+    Xtest : array
+        The X test data
+    Ytest : array
+        The Y test data
+
+    Returns
+    -------
+    mean : array
+        a numpy array of the predicted values
+    var : array
+        a numpy array of the variances of the predictions
+    rmse : int
+        the error between the predicted and actual values
+    """
     mean, var = m.predict_f(Xtest)
     rmse = sqrt(mean_squared_error(Ytest, mean.numpy()))
     return mean, var, rmse
 
 def cross_validation(X, Y, long, lat):
+    """Gets details of locations considered
+
+    Parameters
+    ----------
+    X : str
+        The features data
+    Y : list
+        The target data
+    long : float
+        The longitude coordinate of the device's location
+    lat : float
+        The latitude coordinate of the device's location
+
+    Returns
+    -------
+    mean : array
+        a numpy array of the predicted values
+    var : Array
+        a numpy array of the variances of the predictions
+    Xtest : array
+        a numpy array of the X test data
+    Ytest : array
+        a numpy array of the target test data
+    rmse : int
+        the error between the actual and predicted values
+    """
     location_indices = np.where(np.logical_and(X[:,0]==long, X[:,1]==lat))
     
     Xset = X[np.logical_not(np.logical_and(X[:,0]==long, X[:,1]==lat))]
