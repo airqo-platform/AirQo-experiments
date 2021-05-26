@@ -63,45 +63,8 @@ def cross_validation(X, Y, long, lat):
     mean, var, rmse = make_predictions(m, Xtest, Ytest) 
     return mean.numpy(), var.numpy(), Xtest, Ytest, round(rmse, 2)
 
-def overall_function():
-    rmse_list =[]
-
-    #for i in range(5):
-    for i in range(len(longs)):
-        try:
-            mean, var, Xtest, Ytest, rmse = cross_validation(X, Y, longs[i], lats[i])
-            #print(f'Location {i} successful')
-            #rmse_list.append(rmse)
-            
-            location_name = locations_df.loc[locations_df['long'] == longs[i], 'location'].iloc[0]
-            print(f'{location_name} successful')
-            rmse_list.append({'location':location_name, 'rmse':rmse})
-
-            plt.figure(figsize=(12,6))
-            plt.title(f'{location_name}, rmse:{rmse}')
-            plt.xlim(f2(Xtest[:,2]).min()-timedelta(hours=1), f2(Xtest[:,2]).max()+timedelta(hours=1))
-            plt.ylim(0,200)
-            plt.plot(f2(Xtest[:, 2]), Ytest, label='Actual')
-            plt.plot(f2(Xtest[:, 2]), mean, label='Predicted')
-            plt.fill_between(f2(Xtest[:, 2]),
-                            mean[:,0]-1.96*np.sqrt(var[:, 0]),
-                            mean[:,0]+1.96*np.sqrt(var[:, 0]),
-                            color="C0",
-                            alpha=0.2)
-            plt.legend(loc='best')
-            plt.savefig(f'images/plots/{location_name}.png') 
-            #plt.show()
-        except Exception as e:
-            print(f'Location {i} failed')
-            print(e)
-    return rmse_list
 
 if __name__=='__main__':
     locations_df = get_location_data('data/raw/channels.csv', ['location', 'lat', 'long'])
     X, Y = get_data('data/raw/data.p')
-    f = lambda time: Timestamp.fromtimestamp(time*3600)
-    f2 = np.vectorize(f)
-    longs = [X[:,0][index] for index in sorted(np.unique(X[:,0], return_index=True)[1])]
-    lats = [X[:,1][index] for index in sorted(np.unique(X[:,1], return_index=True)[1])]
-    rmse_list = overall_function()
-    print(rmse_list)
+    print(locations_df.shape[0], X.shape, Y.shape)
