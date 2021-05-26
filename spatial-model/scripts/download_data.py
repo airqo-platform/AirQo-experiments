@@ -1,71 +1,86 @@
 import pandas as pd 
+import numpy as np
+from google.cloud import storage
+import pickle
+import json
+import requests
+from datetime import datetime, timedelta
 
-def get_locations_data(path, columns):
-    df = pd.read_csv(path, usecols = columns)
-    return df
-
-def get_loc(channel_id):
+def get_channels():
     '''
-    Returns a dataframe consisting of geocoordinates and channel id of a device
+    Gets details of channels whose data is to be used in training
     '''
-    sql = """
-    SELECT channel_id, longitude, latitude 
-    FROM `airqo-250220.thingspeak.channel`
-    WHERE channel_id={}
-    """.format(channel_id)
+    blob = storage_client.get_bucket('api-keys-bucket') \
+        .get_blob('kampala-api-keys.json') \
+        .download_as_string()
+    return json.loads(blob)
 
-    df = client.query(sql).to_dataframe()
-    return df
-
-def preprocessing(df): #hasn't yet been tested
+def preprocessing(df):
     '''
     Preprocesses data for a particular channel
     '''
+    df = df.drop_duplicates()
+    df['field1'].fillna(df['field3'], inplace=True)
+    df = df[['created_at','field1']]
+    df['created_at'] = pd.to_datetime(df['created_at'])
+    df['field1'] = pd.to_numeric(df['field1'], errors='coerce')
     df = df.sort_values(by='created_at',ascending=False)
     df = df.set_index('created_at')
     hourly_df = df.resample('H').mean()
     hourly_df.dropna(inplace=True)
     hourly_df= hourly_df.reset_index()
+
     return hourly_df
 
-def get_entries_since(channel_id, start_date='2020-09-17 00:00:00', end_date='2020-09-23 23:59:59'):
+def download_seven_days(channel_id, api_key):
     '''
-    Returns data for a 7-day period for a particular channel
+    Downloads data from ThingSpeak for a specific channel for the past week
     '''
-    from datetime import datetime,timedelta
+    channel_data = []
+    result = 8000
+    end_time = datetime.utcnow()
+    start_time = end_time-timedelta(days=7)
+    #start_time = end_time-timedelta(hours=1) #delete
+    start = datetime.strftime(start_time, '%Y-%m-%dT%H:%M:%SZ')
+    end = datetime.strftime(end_time, '%Y-%m-%dT%H:%M:%SZ')
+    base_url = f'https://api.thingspeak.com/channels/{channel_id}/feeds.json'
+    
+    while (end_time > start_time) and (result==8000):
+        channel_url = base_url+'?start='+start+'&end='+end
+        print(channel_url)
+        data = json.loads(requests.get(channel_url, timeout = 100.0).content.decode('utf-8'))
+        if (data!=-1 and len(data['feeds'])>0):
+            channel_data.extend(data['feeds'])
+            end = data['feeds'][0]['created_at']
+            result = len(data['feeds'])
+            print(result)
+            end_time = datetime.strptime(end, '%Y-%m-%dT%H:%M:%SZ') - timedelta(seconds=1)
+        else:
+            return pd.DataFrame()
+    return pd.DataFrame(channel_data)
 
-    sql = """
-    SELECT created_at, channel_id, pm2_5 
-    FROM `airqo-250220.thingspeak.clean_feeds_pms` 
-    WHERE channel_id={} 
-    AND created_at between '{}' AND '{}'
-    """.format(channel_id, start_date, end_date)
-
-    df = client.query(sql).to_dataframe() 
-    return df
-
-def download_data(path):
+def download_all_data():
+    '''
+    Re-trains the model regularly
+    '''
     X = np.zeros([0,3])
     Y = np.zeros([0,1])
-    for chan in channels:
-    d = get_entries_since(chan)
-    if d.shape[0]!=0:
-        d = preprocessing(d)
-        #loc = get_loc(chan)
-        loc = locations_df.loc[locations_df['id'] == chan, ['id', 'lat', 'long']]
-        loc = loc[['id', 'long', 'lat']]
-            
-        Xchan = np.c_[np.repeat(np.array(loc)[:,1:],d.shape[0],0),[n.timestamp()/3600 for n in d['created_at']]]
-            
-        Ychan = np.array(d['pm2_5'])
-        X = np.r_[X,Xchan]#appending device X data to array X
-        Y = np.r_[Y,Ychan[:, None]]#appending device Y data to array Y
-        print (str(chan)+':done!')
-    else:
-        print(str(chan)+':empty!')
-    pickle.dump({'X':X,'Y':Y},open(f'{path}/data.p','wb'))
+    channels = get_channels()
+    for channel in channels:
+        d = download_seven_days(channel['id'], channel['api_key'])
+        if d.shape[0]!=0:
+            d = preprocessing(d)
+            df = pd.DataFrame({'channel_id':[channel['id']], 
+                               'longitude':[channel['long']], 
+                               'latitude':[channel['lat']]})
+        
+            Xchan = np.c_[np.repeat(np.array(df)[:,1:],d.shape[0],0),[n.timestamp()/3600 for n in d['created_at']]]
+            Ychan = np.array(d['field1'])
+            X = np.r_[X,Xchan]
+            Y = np.r_[Y,Ychan[:, None]]
+    pickle.dump({'X':X,'Y':Y},open('data/raw/data.p','wb'))
+
 
 if __name__=='__main__':
-    locations_df = get_locations_data('C:/Users/User/AirQo/Lilly/gps-for-air-pollution/channels.csv', 
-                                  ['location', 'lat', 'long'])
-    print(locations_df.head())
+    storage_client = storage.Client.from_service_account_json('AirQo-d982995f6dd8.json')
+    download_all_data()
