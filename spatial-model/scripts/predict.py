@@ -11,20 +11,58 @@ from datetime import timedelta
 from statistics import mean
 
 def get_location_data(path, columns):
+    """Gets details of locations considered
+
+    Parameters
+    ----------
+    path : str
+        The file location of the spreadsheet
+    columns: list
+        The names of the columns to be considered
+
+    Returns
+    -------
+    df : DataFrame
+        a pandas dataframe consisting of the locations' data in the spreadsheet
+    """
     df = pd.read_csv(path, usecols=columns)
     return df
 
 def get_data(path):
-    '''Loads data from saved pickle file'''
+    """Loads data from saved file
+
+    Parameters
+    ----------
+    path : str
+        The file location of the pickle file
+
+    Returns
+    -------
+    X : Array
+        a numpy array consisting of the features data
+    Y: Array
+        a numpy array consisting of the target data
+    """
     d = pickle.load(open(path,'rb'))
     X = d['X']
     Y = d['Y']
     return X, Y
 
 def train_model(Xtraining, Ytraining):
-    '''
-    Creates a model, trains it using given data and saves it for future use
-    '''
+    """Develops and trains a model
+
+    Parameters
+    ----------
+    Xtraining : Array
+        The X training data
+    Ytraining: Array
+        The target training data
+
+    Returns
+    -------
+    m : model
+        a GPR model trained on the training data
+    """
     
     #defining kernel
     k = gpflow.kernels.RBF(lengthscales=[0.08, 0.08, 1.], variance=625) + gpflow.kernels.Bias()
