@@ -5,7 +5,7 @@ on:
     branches: master
 jobs:
   check:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    #if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     name: check changed microservice(s)
     outputs:
       run_auth_service: ${{ steps.check_files.outputs.run_python_app }} 
