@@ -2,7 +2,7 @@ name: deploy-apis-to-testing
 
 on:
   push:
-    branches: master
+    branches: setup-ci-cd
 jobs:
   check:
     #if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
