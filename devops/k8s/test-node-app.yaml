@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airqo-test-node-api
+  namespace: testing
+spec:
+  selector:
+    matchLabels:
+      app: test-node-api
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: test-node-api
+    spec:
+      containers:
+        - name: test-node-api
+          image: us.gcr.io/airqo-250220/airqo-test-node-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: test-node-api
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: airqo-test-node-api-svc
+  namespace: testing
+spec:
+  selector:
+    app: test-node-api
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 32098
+  type: NodePort

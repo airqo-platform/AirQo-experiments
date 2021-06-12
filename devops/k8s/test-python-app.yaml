@@ -1,15 +1,12 @@
-###########################################################
-# Start deployment of device-monitoring microservice - staging
-###########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: airqo-stage-test-api
-  namespace: staging
+  name: airqo-test-python-api
+  namespace: testing
 spec:
   selector:
     matchLabels:
-      app: sta-test-api
+      app: test-python-api
   replicas: 2
   strategy:
     type: RollingUpdate
@@ -20,25 +17,25 @@ spec:
   template:
     metadata:
       labels:
-        app: sta-test-api
+        app: test-python-api
     spec:
       containers:
-        - name: sta-test-api
-          image: us.gcr.io/airqo-250220/airqo-stage-test-api:latest
+        - name: test-python-api
+          image: us.gcr.io/airqo-250220/airqo-test-python-api:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
-              name: sta-test-api
+              name: test-python-api
 
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: airqo-stage-test-api-svc
-  namespace: staging
+  name: airqo-test-python-api-svc
+  namespace: testing
 spec:
   selector:
-    app: sta-test-api
+    app: test-python-api
   ports:
     - protocol: TCP
       port: 5000
