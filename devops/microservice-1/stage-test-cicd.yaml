@@ -1,0 +1,47 @@
+###########################################################
+# Start deployment of device-monitoring microservice - staging
+###########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airqo-stage-test-api
+  namespace: staging
+spec:
+  selector:
+    matchLabels:
+      app: sta-test-api
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: sta-test-api
+    spec:
+      containers:
+        - name: sta-test-api
+          image: us.gcr.io/airqo-250220/airqo-stage-test-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+              name: sta-test-api
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: airqo-stage-test-api-svc
+  namespace: staging
+spec:
+  selector:
+    app: sta-test-api
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 32099
+  type: NodePort

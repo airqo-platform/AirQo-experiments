@@ -1,101 +1,41 @@
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
-kind: Deployment 
-metadata: 
-  name: microservice-1 
-spec: 
-  selector: 
-    matchLabels: 
-      app: microservice-1 
-  replicas: 2 # tells deployment to run 2 pods matching the template 
-  template: 
-    metadata: 
-      labels: 
-        app: microservice-1 
-    spec: 
-      containers: 
-      - name: microservice-1 
-        imagePullPolicy: Never
-        image: microservice-1:0.0.1
-        ports: 
-        - containerPort: 5000 
---- 
-# https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service  
-kind: Service 
-apiVersion: v1 
-metadata: 
-  name: microservice-1-service 
-spec: 
-  selector: 
-    app: microservice-1 
-  ports: 
-  - protocol: TCP 
-    port: 5000 
-    targetPort: 5000 
-    nodePort: 30020
-  type: NodePort 
-
-#
-#  ---
-# apiVersion: "v1"
-# kind: "Namespace"
-# metadata:
-#  name: "staging"
-# ---
-# apiVersion: "apps/v1"
-# kind: "Deployment"
-# metadata:
-#   name: "prediction-service"
-#   namespace: "staging"
-#   labels:
-#     app: "prediction-service"
-# spec:
-#   replicas: 3
-#   selector:
-#     matchLabels:
-#       app: "prediction-service"
-#   template:
-#     metadata:
-#       labels:
-#         app: "prediction-service"
-#     spec:
-#       containers:
-#       - name: "prediction-service-20200107t082043-sha256"
-#         image: "us.gcr.io/airqo-250220/appengine/prediction-service.20200107t082043@sha256:05d0d0b7f149f0d7ccc5cec8dca522373df64d14ebc265e5173d0cc8cf3cb2d3"
-# ---
-# apiVersion: "autoscaling/v2beta1"
-# kind: "HorizontalPodAutoscaler"
-# metadata:
-#   name: "prediction-service-hpa"
-#   namespace: "staging"
-#   labels:
-#     app: "prediction-service"
-# spec:
-#   scaleTargetRef:
-#     kind: "Deployment"
-#     name: "prediction-service"
-#     apiVersion: "apps/v1"
-#   minReplicas: 1
-#   maxReplicas: 5
-#   metrics:
-#   - type: "Resource"
-#     resource:
-#       name: "cpu"
-#       targetAverageUtilization: 80
-
-
-# ---
-# apiVersion: "v1"
-# kind: "Service"
-# metadata:
-#   name: "prediction-service-service"
-#   namespace: "staging"
-#   labels:
-#     app: "prediction-service"
-# spec:
-#   ports:
-#   - protocol: "TCP"
-#     port: 80
-#   selector:
-#     app: "prediction-service"
-#   type: "LoadBalancer"
-#   loadBalancerIP: ""
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: microservice-1
+spec:
+  selector:
+    matchLabels:
+      app: microservice-1
+  replicas: 2 # tells deployment to run 2 pods matching the template
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: microservice-1
+    spec:
+      containers:
+        - name: microservice-1
+          imagePullPolicy: always
+          image: us.gcr.io/airqo-250220/airqo-stage-test-api:latest
+          ports:
+            - containerPort: 5000
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+kind: Service
+apiVersion: v1
+metadata:
+  name: microservice-1-service
+spec:
+  selector:
+    app: microservice-1
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 30020
+  type: NodePort
