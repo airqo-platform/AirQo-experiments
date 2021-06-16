@@ -10,14 +10,41 @@ MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
 
 def connect_db(owner):
+    """Connects to database
+
+    Parameters
+    ----------
+    owner : str
+        The database owner
+
+    Returns
+    -------
+    db : Database
+        a MongoDB connection
+    """
     db_name = f'airqo_netmanager_{owner}'
     db = client[db_name]
     return db
 
 def get_device_details(device_id, owner):
-    '''
-    Returns a device\'s details given channel ID
-    '''
+    """Returns a device's details given the ID
+
+    Parameters
+    ----------
+    device_id : str
+        The channel ID of the device
+    owner: str
+        The owner of the device
+
+    Returns
+    -------
+    lat : float
+        Latitude coordinate of the device's location
+    lon: float
+        Longitude coordinate of the device's location
+    name: str
+        Name of the device
+    """
     db= connect_db(owner)    
     query = {
         'channelID': device_id
@@ -30,25 +57,71 @@ def get_device_details(device_id, owner):
         'channelID':1
     }
     records = list(db.devices.find(query, projection))
-    return records[0]['latitude'], records[0]['longitude'], records[0]['name']
+    lat, lon, name = records[0]['latitude'], records[0]['longitude'], records[0]['name']
+    return lat, lon, name
 
 def str_to_date(st):
-    return datetime.strptime(st,'%Y-%m-%dT%H:%M:%S.%fZ')
+    """Converts date string to datetime
+
+    Parameters
+    ----------
+    st : str
+        Date string
+
+    Returns
+    -------
+    new_date : Datetime 
+        Date from date string
+    """
+    new_date= datetime.strptime(st,'%Y-%m-%dT%H:%M:%S.%fZ')
+    return new_date
 
 
 def date_to_str(mydate):
-    return datetime.strftime(mydate,'%Y-%m-%dT%H:%M:%SZ')
+    """Converts date string to datetime
+
+    Parameters
+    ----------
+    mydate : date
+        DateTime
+
+    Returns
+    -------
+    date_string : str 
+        String from datetime provided
+    """
+    date_string = datetime.strftime(mydate,'%Y-%m-%dT%H:%M:%SZ')
+    return date_string
 
 
 def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z',end_time=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')):
-    '''
-    Gets the PM data of a particular device in a specified time period
-    '''
+    """Gets the PM data of a particular device in a specified time period
+
+    Parameters
+    ----------
+    device_id : str
+        The channel ID of the device
+    owner: str
+        The owner of the device
+    verbose: boolean
+        Whether download progress is shown
+    start_time:
+        The start time for the data download
+    end_time:
+        The end time for the data download
+
+    Returns
+    -------
+    modified_result : list
+        A list of dictionaries with the device's data
+    
+    """
+
     lat, lon, name = get_device_details(device_id, owner)
-    url = 'https://staging-platform.airqo.net/api/v1/devices/events'
-    result = [] #stores all data downloaded for a device
-    measurements_length= 120
-    count = 0
+    url = 'https://staging-platform.airqo.net/api/v1/devices/events' #AirQo Platform Get Events endpoint
+    result = [] #array to store all data downloaded for a device
+    measurements_length= 120 #standard response length from api
+    count = 0 #iteration number
     while measurements_length==120:
         count+=1
         parameters = {
@@ -75,6 +148,7 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
         except Exception as e:
             #print(e)
             pass
+    #restructuring and removing unwanted fields
     modified_result = [{'time': x['time'],
                      'latitude': lat,
                      'longitude': lon,
@@ -86,6 +160,7 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
 
 
 if __name__=='__main__':
+    #example: getting data for one device
     test_array = get_pm_data(1351540, 'airqo', True)
     print(test_array)
         
