@@ -24,7 +24,7 @@ To run this code, you need to have Python>=3.7 installed on your system.
 > ```
 > Execute code:
 > ```
-> jupyter notebook
+> python scripts/get_data.py
 > ```
 Open notebooks/download_data.ipynb and select run all
 
