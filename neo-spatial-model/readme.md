@@ -1,5 +1,5 @@
-# Random Forest Calibration Hackathon Code
-This project aims to predict PM 2.5 readings for the next hour for various locations using previous readings.
+# Spatial Model Data Download Code
+This project aims to create a dataset to be used for spatial modelling.
 
 
 ## Instructions to run the code
@@ -11,7 +11,7 @@ To run this code, you need to have Python>=3.7 installed on your system.
 > ```
 > Change directory to this folder:
 > ```
-> cd spatial-model
+> cd neo-spatial-model
 > ```
 > Create and activate virtual python enviroment:
 > ```
@@ -26,7 +26,7 @@ To run this code, you need to have Python>=3.7 installed on your system.
 > ```
 > jupyter notebook
 > ```
-Open notebooks/spatial_model.ipynb and select run all
+Open notebooks/download_data.ipynb and select run all
 
 ## LICENSE
 
