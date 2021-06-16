@@ -2,9 +2,12 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 import requests
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-
-client = MongoClient("mongodb://admin:airqo-250220-master@35.224.67.244:27017")
+MONGO_URI = os.getenv('MONGO_URI')
+client = MongoClient(MONGO_URI)
 
 def connect_db(owner):
     db_name = f'airqo_netmanager_{owner}'
@@ -37,7 +40,7 @@ def date_to_str(mydate):
     return datetime.strftime(mydate,'%Y-%m-%dT%H:%M:%SZ')
 
 
-def get_pm_data(device_id, owner,start_time='2021-01-01T01:00:00Z',end_time=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')):
+def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z',end_time=datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')):
     '''
     Gets the PM data of a particular device in a specified time period
     '''
@@ -55,7 +58,8 @@ def get_pm_data(device_id, owner,start_time='2021-01-01T01:00:00Z',end_time=date
             'endTime': end_time,
             'recent': 'no'
         }
-        print(f'Iteration {count} - Start Time: {start_time}, End Time: {end_time}')
+        if verbose:
+            print(f'Iteration {count} - Start Time: {start_time}, End Time: {end_time}')
         try:
             response = requests.get(url, params=parameters)
             if response.status_code ==200:
@@ -66,6 +70,8 @@ def get_pm_data(device_id, owner,start_time='2021-01-01T01:00:00Z',end_time=date
                     result.extend(measurements)
                     new_end_time = measurements[-1]['time']
                     end_time = date_to_str(str_to_date(new_end_time) - timedelta(seconds=1))
+            else:
+                pass
         except Exception as e:
             #print(e)
             pass
@@ -77,4 +83,9 @@ def get_pm_data(device_id, owner,start_time='2021-01-01T01:00:00Z',end_time=date
                      'pm10': x['pm10']['value'],
                     } for x in result]
     return modified_result
+
+
+if __name__=='__main__':
+    test_array = get_pm_data(1351540, 'airqo', True)
+    print(test_array)
         
