@@ -134,7 +134,7 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
             'device': name,
             'startTime': start_time,
             'endTime': end_time,
-            'frequency':frequency
+            'frequency':frequency,
             'recent': 'no'
         }
         if verbose:
