@@ -120,9 +120,9 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
     lat, lon, name = get_device_details(device_id, owner)
     url = 'https://staging-platform.airqo.net/api/v1/devices/events' #AirQo Platform Get Events endpoint
     result = [] #array to store all data downloaded for a device
-    measurements_length= 120 #standard response length from api
+    measurements_length= 1000 #standard response length from api
     count = 0 #iteration number
-    while measurements_length==120:
+    while measurements_length==1000:
         count+=1
         parameters = {
             'tenant': owner,
