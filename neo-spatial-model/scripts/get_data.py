@@ -167,6 +167,6 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
 
 if __name__=='__main__':
     #example: getting data for one device
-    test_array = get_pm_data(1351540, 'airqo', True)
+    test_array = get_pm_data('AW66FF7V', 'kcca')
     print(test_array)
         
