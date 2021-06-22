@@ -117,6 +117,11 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
     
     """
 
+    if owner=='airqo':
+        frequency='minute'
+    else:
+        frequency='raw'
+
     lat, lon, name = get_device_details(device_id, owner)
     url = 'https://staging-platform.airqo.net/api/v1/devices/events' #AirQo Platform Get Events endpoint
     result = [] #array to store all data downloaded for a device
@@ -129,6 +134,7 @@ def get_pm_data(device_id, owner, verbose=True, start_time='2021-05-01T01:00:00Z
             'device': name,
             'startTime': start_time,
             'endTime': end_time,
+            'frequency':frequency
             'recent': 'no'
         }
         if verbose:
