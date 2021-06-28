@@ -100,5 +100,6 @@ def get_entries_since(channel_id, start_date='2020-09-17 00:00:00', end_date='20
 if __name__=='__main__':
     locations_df = get_location_data('data/raw/channels.csv', ['location', 'id', 'lat', 'long'])
     channels = list(locations_df.id)
-    print (channels)
+    df = get_entries_since(channels[5])
+    print (df.head())
     
