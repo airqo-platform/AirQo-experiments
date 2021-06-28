@@ -81,7 +81,7 @@ def train_model(Xtraining, Ytraining):
     return m
 
 def make_predictions(m, Xtest, Ytest):
-    """Gets details of locations considered
+    """Makes model predictions on test data
 
     Parameters
     ----------
@@ -106,7 +106,7 @@ def make_predictions(m, Xtest, Ytest):
     return mean, var, rmse
 
 def cross_validation(X, Y, long, lat):
-    """Gets details of locations considered
+    """Cross validation and performance evaluation
 
     Parameters
     ----------
