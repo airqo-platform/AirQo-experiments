@@ -1,15 +1,30 @@
-import pandas as pd 
+import numpy as np
+import gpflow
+from gpflow import set_trainable
 
+def preprocessing(df, lat, lon, start_date, end_date):
+    df.set_index('time', inplace=True)
+    df.dropna(inplace=True)
+    hourly_df = df.resample('H').mean()
+    hourly_df['latitude'], hourly_df['longitude']=lat,lon
+    hourly_df.reset_index(inplace=True)
+    hourly_df.dropna(inplace=True)
+    hourly_df = hourly_df[(hourly_df['time']>= start_date)&(hourly_df['time']<=end_date)]
+    hourly_df['day'] = [time.day for time in hourly_df['time']]
+    hourly_df['day_of_week'] = [time.weekday() for time in hourly_df['time']]
+    hourly_df['hour'] = [time.hour for time in hourly_df['time']]
+    #hourly_df['time'] = [time.timestamp()/3600 for time in hourly_df['time']]
+    hourly_df.drop(['time'], axis=1, inplace=True)
+    return hourly_df
 
-
-def cross_validation(X, Y, long, lat):
+def cross_validation(X, Y, lon, lat):
     
-    location_indices = np.where(np.logical_and(X[:,0]==long, X[:,1]==lat))
+    location_indices = np.where(np.logical_and(X[:,0]==lon, X[:,1]==lat))
     
-    Xtraining = X[np.logical_not(np.logical_and(X[:,0]==long, X[:,1]==lat))]
+    Xtraining = X[np.logical_not(np.logical_and(X[:,0]==lon, X[:,1]==lat))]
     Ytraining = np.delete(Y, slice(location_indices[0][0],location_indices[0][-1]+1), axis=0)
     
-    Xtest = X[np.logical_and(X[:,0]==long, X[:,1]==lat)]
+    Xtest = X[np.logical_and(X[:,0]==lon, X[:,1]==lat)]
     Ytest = Y[location_indices[0][0]:location_indices[0][-1]+1]
     #kernel
     k = gpflow.kernels.RBF(variance=625) + gpflow.kernels.Bias()
